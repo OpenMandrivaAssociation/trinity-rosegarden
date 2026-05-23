@@ -3,10 +3,6 @@
 %bcond gamin 1
 
 # TDE variables
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-
 %define tde_pkg rosegarden
 %define tde_prefix /opt/trinity
 
@@ -18,14 +14,14 @@
 %define _disable_rebuild_configure 1
 
 # fixes error: Empty %files file …/debugsourcefiles.list
-%define _debugsource_template %{nil}
+%undefine _debugsource_template
 
 %define tarball_name %{tde_pkg}-trinity
 
 
 Name:		trinity-%{tde_pkg}
-Version:	1.7.0
-Release:	%{?tde_version:%{tde_version}_}3
+Version:	14.1.6
+Release:	1
 Summary:	Music editor and MIDI/audio sequencer [Trinity]
 Group:		Applications/Multimedia
 URL:		http://www.rosegardenmusic.com/
@@ -33,7 +29,7 @@ URL:		http://www.rosegardenmusic.com/
 License:	GPLv2+
 
 
-Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/applications/multimedia/%{tarball_name}-%{tde_version}.tar.xz
+Source0:		https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/applications/multimedia/%{tarball_name}-%{version}.tar.xz
 
 BuildSystem:    cmake
 
@@ -52,12 +48,13 @@ BuildOption:    -DWANT_FULLDBG=OFF
 BuildOption:    -DBUILD_ALL=ON
 BuildOption:    -DWITH_GCC_VISIBILITY=%{!?with_clang:ON}%{?with_clang:OFF}
 
-BuildRequires:	trinity-tdelibs-devel >= %{tde_version}
-BuildRequires:	trinity-tdebase-devel >= %{tde_version}
+BuildRequires:	trinity-tdelibs-devel >= %{version}
+BuildRequires:	trinity-tdebase-devel >= %{version}
+BuildRequires:	trinity-tde-cmake >= %{version}
+
 BuildRequires:	desktop-file-utils
 BuildRequires:	gettext
 
-BuildRequires:	trinity-tde-cmake >= %{tde_version}
 BuildRequires: libtool
 
 %{!?with_clang:BuildRequires:	gcc-c++}
@@ -112,7 +109,7 @@ BuildRequires:  pkgconfig(ice)
 BuildRequires:  pkgconfig(sm)
 
 
-Requires:		%{name}-data = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		%{name}-data = %{EVRD}
 
 
 %description
@@ -123,7 +120,7 @@ lilypond and Csound files export, etc.
 
 %package data
 Group:			Applications/Multimedia
-Requires:		%{name} = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		%{name} = %{EVRD}
 Summary:		music editor and MIDI/audio sequencer data files [Trinity]
 
 %description data
